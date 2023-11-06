@@ -1,0 +1,44 @@
+pkgname=mirakc-git
+pkgver=2.5.3.r0.23898966
+pkgrel=1
+pkgdesc="A Mirakurun-compatible PVR backend written in Rust"
+arch=('x86_64')
+url="https://github.com/mirakc/mirakc"
+license=('MIT')
+groups=()
+depends=()
+makedepends=(git cargo)
+provides=('mirakc')
+replaces=()
+backup=()
+options=()
+install=
+source=('git+https://github.com/mirakc/mirakc.git#branch=release')
+noextract=()
+md5sums=('SKIP')
+
+pkgver() {
+	cd "$srcdir/mirakc"
+	printf "%s" "$(git describe --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+prepare() {
+	cd "$srcdir/mirakc"
+	export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+	cd "$srcdir/mirakc"
+	export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo build --profile=release --bin mirakc
+	cargo build --profile=release --bin mirakc-timeshift-fs
+}
+
+package() {
+	cd "$srcdir/mirakc"
+	install -Dm0755 -t "$pkgdir/usr/local/bin/" "target/release/mirakc"
+	install -Dm0755 -t "$pkgdir/usr/local/bin/" "target/release/mirakc-timeshift-fs"
+	install -Dm0755 -t "$pkgdir/etc/mirakc/" "resources/strings.yml"
+}
