@@ -1,0 +1,11 @@
+[Unit]
+Description=A Mirakurun-compatible PVR backend written in Rust
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/mirakc -c /etc/mirakc/config.yml
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

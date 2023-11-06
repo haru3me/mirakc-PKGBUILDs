@@ -13,9 +13,11 @@ replaces=()
 backup=()
 options=()
 install=
-source=('git+https://github.com/mirakc/mirakc.git#branch=release')
+source=('git+https://github.com/mirakc/mirakc.git#branch=release'
+		'mirakc.service')
 noextract=()
-md5sums=('SKIP')
+sha256sums=('SKIP'
+		'115395972bad123484365c0d00ff8f3958041d5b50ab08ae708ec157b5b75826')
 
 pkgver() {
 	cd "$srcdir/mirakc"
@@ -37,8 +39,9 @@ build() {
 }
 
 package() {
+	install -Dm0644 -t "$pkgdir/usr/lib/systemd/system/" "mirakc.service"
 	cd "$srcdir/mirakc"
 	install -Dm0755 -t "$pkgdir/usr/local/bin/" "target/release/mirakc"
 	install -Dm0755 -t "$pkgdir/usr/local/bin/" "target/release/mirakc-timeshift-fs"
-	install -Dm0755 -t "$pkgdir/etc/mirakc/" "resources/strings.yml"
+	install -Dm0644 -t "$pkgdir/etc/mirakc/" "resources/strings.yml"
 }
