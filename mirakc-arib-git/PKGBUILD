@@ -1,0 +1,40 @@
+pkgname=mirakc-arib-git
+pkgver=0.21.14.r0.c2a9f56
+pkgrel=1
+pkgdesc="mirakc-tools for Japanese TV broadcast contents"
+arch=('x86_64')
+url="https://github.com/mirakc/mirakc-arib"
+license=('MIT')
+groups=()
+depends=()
+makedepends=(git cmake automake autoconf dos2unix gcc libtool make ninja patch pkgconf)
+provides=('mirakc-arib')
+replaces=()
+backup=()
+options=()
+install=
+source=('git+https://github.com/mirakc/mirakc-arib.git')
+noextract=()
+md5sums=('SKIP')
+
+pkgver() {
+	cd "$srcdir/mirakc-arib"
+	printf "%s" "$(git describe --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+prepare() {
+	cd "$srcdir/mirakc-arib"
+    git submodule update --init --recursive
+}
+
+build() {
+	cd "$srcdir/mirakc-arib"
+    cmake -S . -B build -G Ninja -D CMAKE_BUILD_TYPE=Release
+    ninja -C build vendor
+    ninja -C build
+}
+
+package() {
+	cd "$srcdir/mirakc-arib"
+	install -Dm0755 -t "$pkgdir/usr/local/bin/" "build/bin/mirakc-arib"
+}
