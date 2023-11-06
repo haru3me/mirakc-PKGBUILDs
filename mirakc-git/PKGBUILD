@@ -17,7 +17,7 @@ source=('git+https://github.com/mirakc/mirakc.git#branch=release'
 		'mirakc.service')
 noextract=()
 sha256sums=('SKIP'
-		'115395972bad123484365c0d00ff8f3958041d5b50ab08ae708ec157b5b75826')
+		'477325879e6951ccf08a6bd335d6b50a28ecbb83a7060632504dc8aff8b41a73')
 
 pkgver() {
 	cd "$srcdir/mirakc"
